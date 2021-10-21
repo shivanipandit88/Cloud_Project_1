@@ -1,0 +1,409 @@
+<!doctype html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang=""> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8" lang=""> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9" lang=""> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="">
+<!--<![endif]-->
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Dashboard</title>
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#000000">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css">
+    <!-- 11-3-2021 -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="http://localhost:3000/stylesheets/bootstrap.min.css">
+    <link rel="stylesheet" href="http://localhost:3000/stylesheets/main.css">
+</head>
+
+<body>
+    <header class="header-bottom">
+        <div class="container">
+            <div class="breadcrumps">
+                <span class="icon"><img src="http://localhost:3000/images/icon-home.png" alt="Home"></span>
+                <ul>
+                    <li><a href="#">Home</a></li>
+                    <li>User Data</li>
+                </ul>
+            </div>
+            <div class="user-account">
+                <div class="dropdown show">
+                    <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <%= user %>
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                        <a class="dropdown-item" onclick="location.href='/users/login'">Logout</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <div class="clear"></div>
+
+    <div class="main">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-3">
+                    <!-- required for floating -->
+                    <!-- Nav tabs -->
+                    <ul class="nav nav-tabs tabs-left sideways">
+                        <li class="active"><a href="#home-v" data-toggle="tab">My <br> Data <img
+                                    src="http://localhost:3000/images/icon-tick.svg"><img
+                                    src="http://localhost:3000/images/icon-tick-blue.svg" class="active"></a>
+                        </li>
+                        <li><a href="#profile-v" data-toggle="tab">Upload <br> File <img
+                                    src="http://localhost:3000/images/icon-tick.svg"><img
+                                    src="http://localhost:3000/images/icon-tick-blue.svg" class="active"></a></li>
+                        <li class="admin-only"><a href="#users-v" data-toggle="tab">All Users <img
+                                    src="http://localhost:3000/images/icon-tick.svg"><img
+                                    src="http://localhost:3000/images/icon-tick-blue.svg" class="active"></a></li>
+                    </ul>
+                </div>
+
+                <div class="col-xs-9">
+                    <!-- Tab panes -->
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="home-v">
+                            <div class="start-new">
+                                <table>
+                                    <thead>
+                                        <th>Sr. No</th>
+                                        <th>File Name</th>
+                                        <th>Description</th>
+                                        <th>Created On</th>
+                                        <th>Modify</th>
+                                    </thead>
+                                    <tbody>
+                                        <% data.forEach(d=> {%>
+                                            <tr>
+                                                <td>
+                                                    <%= d.id %>
+                                                </td>
+                                                <td>
+                                                    <a href="https://d3nxv8xp94ckxu.cloudfront.net/<%= d.file %>"
+                                                        target="_blank">
+                                                        <%console.log(d)%>
+                                                        <%= d.file %>
+                                                    </a>
+                                                </td>
+                                                <td>
+                                                    <%= d.descriptions %>
+                                                </td>
+                                                <td>
+                                                    <%= d.created_at %>
+                                                </td>
+                                                <td><button data-id="<%= d.id %>" data-user="<%= d.username %>"
+                                                        onclick="deleteFile(this)">Delete</button></td>
+                                            </tr>
+                                            <% } ) %>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="profile-v">
+                            <!-- <form action="/uploads/create" method="post">
+                                <input type="file" name="uploads" class="uploads" />
+                                <input type="text" name="description" class="description" placeholder="Description">
+                                <input type="text" name="username" class="username" placeholder="" hidden value="<=% user %>">
+                                <button type="submit" class="input_submit1">Submit</button>
+                            </form> -->
+                            <form class="form" action="/uploads/create" method="post" id="uploadFile"
+                                enctype="multipart/form-data">
+                                <!-- enctype="multipart/form-data"-->
+                                <div class="form-group has-search">
+                                    <span class="form-control-feedback"><img
+                                            src="http://localhost:3000/images/icon-envelope.svg" alt=""></span>
+                                    <label for="fileField" class="attachment">
+                                        <div class="row btn-file">
+                                            <div class="btn-file__preview"></div>
+                                            <div class="btn-file__actions">
+                                                <div class="btn-file__actions__item col-xs-12 text-center">
+                                                    <div class="btn-file__actions__item--shadow">
+                                                        <div class="visible-xs-block"></div>
+                                                        Select file
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <input name="uploads" type="file" id="fileField" class="uploads">
+                                    </label>
+                                </div>
+                                <div class="form-group has-search">
+                                    <span class="form-control-feedback"><img
+                                            src="http://localhost:3000/images/icon-block.svg" alt=""></span>
+                                    <input type="text" name="description" class="form-control description"
+                                        placeholder="Description">
+                                </div>
+                                <input type="text" name="username" class="username" placeholder="" hidden
+                                    value="<%= user %>">
+                                <div class="submit">
+                                    <button type="submit" class="btn-blue input_submit3">Submit</button>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="tab-pane" id="users-v">
+                            <div class="start-new">
+                                <table>
+                                    <thead>
+                                        <th>First Name</th>
+                                        <th>Last Name</th>
+                                        <th>Email Address</th>
+                                        <th>Username</th>
+                                    </thead>
+                                    <tbody>
+                                        <% user_data && user_data.forEach(d=> {%>
+                                            <tr>
+                                                <td>
+                                                    <%= d.firstname %>
+                                                </td>
+                                                <td>
+                                                    <%= d.lastname %>
+                                                </td>
+                                                <td>
+                                                    <%= d.email %>
+                                                </td>
+                                                <td>
+                                                    <%= d.username %>
+                                                </td>
+                                            </tr>
+                                            <% } ) %>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- basic modal-->
+    <div class="modal fade modal-one" id="connectapi" tabindex="-1" role="dialog" aria-labelledby="connectapi"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <!-- Nav tabs -->
+                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+                        <li class="nav-item active">
+                            <a class="nav-link" id="home-tab" data-toggle="tab" href="#home" role="tab"
+                                aria-controls="home" aria-selected="true">Select My Account</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab"
+                                aria-controls="profile" aria-selected="false">Select My View</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="messages-tab" data-toggle="tab" href="#messages" role="tab"
+                                aria-controls="messages" aria-selected="false">Fetch Data From</a>
+                        </li>
+                    </ul>
+
+                    <!-- Tab panes -->
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                            <form>
+                                <label>
+                                    <input type="radio" name="radio" checked />
+                                    <span>My Account 1</span>
+                                </label>
+                                <label>
+                                    <input type="radio" name="radio" />
+                                    <span>My Account 2</span>
+                                </label>
+                                <label>
+                                    <input type="radio" name="radio" />
+                                    <span>My Account 3</span>
+                                </label>
+                            </form>
+                        </div>
+                        <div class="tab-pane" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                            <form>
+                                <label>
+                                    <input type="radio" name="radio1" checked />
+                                    <span>My View 1</span>
+                                </label>
+                                <label>
+                                    <input type="radio" name="radio1" />
+                                    <span>My View 2</span>
+                                </label>
+                                <label>
+                                    <input type="radio" name="radio1" />
+                                    <span>My View 3</span>
+                                </label>
+                            </form>
+                        </div>
+                        <div class="tab-pane" id="messages" role="tabpanel" aria-labelledby="messages-tab">
+                            <form>
+                                <label>
+                                    <input type="radio" name="radio2" checked />
+                                    <span>Data 1</span>
+                                </label>
+                                <label>
+                                    <input type="radio" name="radio2" />
+                                    <span>Data 2</span>
+                                </label>
+                                <label>
+                                    <input type="radio" name="radio2" />
+                                    <span>Data 3</span>
+                                </label>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- basic modal -->
+    <div class="modal fade modal-two" id="fetchdata" tabindex="-1" role="dialog" aria-labelledby="fetchdata"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <p class="lrg">Please wait while we set things for you...</p>
+                    <img src="images/gif.svg" class="load">
+                    <p>it may take upto 15-20 minutes to process your data depending on the traffic, channels & duration
+                    </p>
+                    <form>
+                        <div class="form-group">
+                            <label for="email">notify me when processing gets completed</label>
+                            <input class="" type="email" name="email" placeholder="Email">
+                            <div class="clear"></div>
+                        </div>
+                    </form>
+                    <button type="button" class="btn-blue-border notify">Notify Me</button>
+                    <button type="button" class="btn-blue">I Will Wait</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- mobile popup -->
+    <div id="myModal" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-body text-center">
+                    <!-- <button type="button" class="close" data-dismiss="modal">&times;</button> -->
+                    <h1>For better experience please switch to desktop</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- END mobile popup -->
+
+
+    <script src="http://localhost:3000/javascripts/jquery-1.12.0.min.js" type="text/javascript"></script>
+    <script src="http://localhost:3000/javascripts/bootstrap.min.js"></script>
+    <script src="http://localhost:3000/javascripts/main.js" type="text/javascript"></script>
+
+    <script type="application/javascript">
+        //Admin show hide
+            
+            <% if (user == 'admin') { %>
+                window.onload = function() {
+                    $('.admin-only').addClass('show');
+                }
+            <% } %>
+            //END Admin show hide
+            //Delete
+            function deleteFile(d) {
+                alert("Entry successfully deleted");
+                $.ajax({
+                    url: "http://localhost:3000/uploads/delete",
+                    type: "POST",
+                    data: { "data_id": d.getAttribute("data-id"), "data_user": d.getAttribute("data-user") },
+                    //dataType: 'jsonp', // Notice! JSONP <-- P (lowercase)
+
+                    success: function (data) {
+                        console.log(data);
+                    },
+                    error: function (err) {
+                        //
+                    }
+                });
+            }
+        //END Delete
+        //mobile popup
+        $(document).ready(function () {
+            if ($(window).width() <= 991) {
+                // do your stuff
+                $('#myModal').modal('show');
+            }
+        });
+        //END mobile popup
+
+        //Upload on submit
+        $(document).ready(function () {
+
+            $(".input_submit1").click(function () {
+                var uploads = $('.uploads').val().replace(/C:\\fakepath\\/i, '');
+                var description = $('.description').val();
+                var username = $('.username').val();
+                if (uploads == '' && description == '') {
+                    alert('Please enter text fields...');
+                }
+                else {
+                    // EXAMPLE FOR JQUERY AJAX COMPLETE FUNC.
+                    $.ajax({
+                        url: "http://localhost:3000/create",
+                        type: "POST",
+                        data: { "uploads": uploads, "description": description, "username": username },
+                        //dataType: 'jsonp', // Notice! JSONP <-- P (lowercase)
+                        headers: {
+                            'Access-Control-Allow-Origin': '*'
+                        },
+                        dataType: "json",
+                        contentType: "application/json; charset=utf-8",
+                        success: function (data) {
+                            console.log(data);
+                        },
+                        error: function (err) {
+                            $('.input_submit1').val('Submit');
+                        }
+                    });
+                }
+            });
+        })
+        //END Upload on submit
+
+        //Custom File Upload
+        jQuery(($) => {
+            $('.attachment input[type="file"]')
+                .on('change', (event) => {
+                    let el = $(event.target).closest('.attachment').find('.btn-file');
+                    var html = $('.uploads').val().replace(/C:\\fakepath\\/i, '');
+                    el
+                        .find('.btn-file__actions__item')
+                        .addClass('padding')
+                        .html(html);
+
+                    el
+                        .find('.btn-file__preview')
+                        .css({
+                            padding: "140px",
+                            'background-image': 'url(' + window.URL.createObjectURL(event.target.files[0]) + ')'
+                        });
+                });
+        });
+        //END Custom File Upload
+    </script>
+
+</body>
+
+</html>

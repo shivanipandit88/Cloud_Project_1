@@ -1,0 +1,120 @@
+<!doctype html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang=""> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8" lang=""> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9" lang=""> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="">
+<!--<![endif]-->
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Login Page</title>
+  <meta name="description" content="">
+  <meta name="keywords" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#000000">
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css">
+  <!-- 11-3-2021 -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="http://localhost:3000/stylesheets/bootstrap.min.css">
+  <link rel="stylesheet" href="http://localhost:3000/stylesheets/main.css">
+</head>
+
+<body>
+    <div class="signin-form">
+        <div class="container">
+            <div class="login">
+                <form class="form" action="/users/upload" method="post" id="logFormLpVal">
+                    <h1 class="heading">Login To Existing Account</h1>
+                    <p class="sml">Welcome back! Please login to continue.</p>
+                    <div class="form-group has-search">
+                        <span class="form-control-feedback"><img src="http://localhost:3000/images/icon-envelope.svg" alt=""></span>
+                        <input type="text" class="form-control" placeholder="Username" name="username" required>
+                    </div>
+                    <div class="form-group has-search">
+                        <span class="form-control-feedback"><img src="http://localhost:3000/images/icon-lock.svg" alt=""></span>
+                        <input type="password" class="form-control" placeholder="Password" name="password" required>
+                    </div>
+                    <div class="submit">
+                        <button type="submit" class="btn-blue input_submit3">Sign In</button><br>
+                        <!-- <a href="#" class="txt-blue">Sign Up</a> -->
+                        <a onclick="location.href='/users'" class="txt-blue">Sign Up</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+  <script src="http://localhost:3000/javascripts/jquery-1.12.0.min.js" type="text/javascript"></script>
+  <script src="http://localhost:3000/javascripts/bootstrap.min.js"></script>
+  <script src="http://localhost:3000/javascripts/main.js" type="text/javascript"></script>
+  <script src="http://localhost:3000/javascripts/jquery.validate.min.js" type="text/javascript"></script>
+
+ 
+      <script type="application/javascript">
+         <% if(error) { %>
+            window.onload = function(){ 
+                      alert("<%=error%>");
+                      }
+        <% } %>
+
+        /***** START FORM VALIDATION *********/
+        $(document).ready(function () {
+          $(function () {
+            $("#logFormLpVal").validate({
+              highlight: function (element) {
+                $(element).parent('div').addClass('error');
+              },
+              unhighlight: function (element) {
+                $(element).parent('div').removeClass('error');
+              },
+              errorClass: 'help-block',
+              rules: {
+                username: { required: true },
+                password: { required: true, minlength: 7 },
+              },
+              messages: {
+                username: { required: 'This field is required.' },
+                password: { required: 'This field is required.', minlength: 'minimun 7 characters required' },
+              }
+            });
+          });
+        })
+        /***** END FORM VALIDATION *********/
+
+        //Upload on submit
+        $(document).ready(function () {
+
+          $(".input_submit3").click(function () {
+            var username = $('.username').val();
+            var password = $('.password').val();
+              // EXAMPLE FOR JQUERY AJAX COMPLETE FUNC.
+              $.ajax({
+                url: "http://localhost:3000/upload",
+                type: "POST",
+                data: { "username": username, "password": password },
+                //dataType: 'jsonp', // Notice! JSONP <-- P (lowercase)
+                headers: {
+                  'Access-Control-Allow-Origin': '*'
+                },
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+                  console.log(data);
+                },
+                error: function (err) {
+                  $('.input_submit3').val('Submit');
+                }
+              });
+          });
+        })
+      </script>
+
+</body>
+
+</html>
